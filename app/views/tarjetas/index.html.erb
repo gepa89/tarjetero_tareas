@@ -20,12 +20,20 @@
   <div class="row">
     <div class="column">
       <%= label_tag :start_date, 'Fecha Inicio' %>
-      <%= text_field_tag :start_date, params[:start_date].presence || l(Date.today.beginning_of_month.prev_month), type: 'date' %>
+      <%= text_field_tag :start_date, params[:start_date].presence || Date.today.prev_month.beginning_of_month.strftime('%Y-%m-%d'), type: 'date', id: 'start_date' %>
     </div>
     <div class="column">
       <%= label_tag :end_date, 'Fecha Fin' %>
-      <%= text_field_tag :end_date, params[:end_date].presence || l(Date.today.end_of_month.prev_month), type: 'date' %>
+      <%= text_field_tag :end_date, params[:end_date].presence || Date.today.prev_month.end_of_month.strftime('%Y-%m-%d'), type: 'date', id: 'end_date' %>
     </div>
   </div>
+  <div class="row">
+    <div class="column"
+      <%= button_tag 'Mes Anterior', type: 'button', id: 'previous_month', class: 'button' %>
+    </div>
+    <div class="column"
+      <%= button_tag 'Mes Siguiente', type: 'button', id: 'next_month', class: 'button' %>
+    </div>
+</div>
   <%= submit_tag 'Filtrar', class: 'button' %>
 <% end %>
