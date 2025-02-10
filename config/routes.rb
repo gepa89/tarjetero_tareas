@@ -1,7 +1,8 @@
 # plugins/tarjetero_tareas/config/routes.rb
 RedmineApp::Application.routes.draw do
-    # Define la ruta para acceder a la vista principal de 'Tarjetas'
-    # Asegúrate de que el nombre del controlador coincide con el nombre del archivo y la definición en el controlador
-    get 'tarjetas', to: 'tarjetas#index', as: 'tarjetas'
-  end
-  
+  # Ruta para la vista principal de 'Tarjetas'
+  get 'tarjetas', to: 'tarjetas#index', as: 'tarjetas'
+
+  # Ruta para actualizar el estado de una tarea (drag & drop)
+  post 'tarjetas/update_status', to: 'tarjetas#update_status', as: 'update_issue_status'
+end

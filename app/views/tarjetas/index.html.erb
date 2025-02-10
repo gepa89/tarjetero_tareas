@@ -2,6 +2,7 @@
   <%= stylesheet_link_tag 'tarjetas', :plugin => :tarjetero_tareas %>
   <%= javascript_include_tag 'tarjetas', :plugin => :tarjetero_tareas %>
 <% end %>
+
 <%= form_tag tarjetas_path, method: :get, id: "filter-form" do %>
   <div class="row">
     <div class="column">
@@ -17,23 +18,58 @@
       <%= select_tag :user_id, options_from_collection_for_select(User.active, :id, :name, params[:user_id]), include_blank: true %>
     </div>
   </div>
+
   <div class="row">
     <div class="column">
       <%= label_tag :start_date, 'Fecha Inicio' %>
-      <%= text_field_tag :start_date, params[:start_date].presence || Date.today.prev_month.beginning_of_month.strftime('%Y-%m-%d'), type: 'date', id: 'start_date' %>
+      <%= text_field_tag :start_date, params[:start_date].presence || l(Date.today.beginning_of_month), type: 'date', id: 'start_date' %>
     </div>
     <div class="column">
       <%= label_tag :end_date, 'Fecha Fin' %>
-      <%= text_field_tag :end_date, params[:end_date].presence || Date.today.prev_month.end_of_month.strftime('%Y-%m-%d'), type: 'date', id: 'end_date' %>
+      <%= text_field_tag :end_date, params[:end_date].presence || l(Date.today.end_of_month), type: 'date', id: 'end_date' %>
     </div>
   </div>
+
   <div class="row">
-    <div class="column"
+    <div class="column">
       <%= button_tag 'Mes Anterior', type: 'button', id: 'previous_month', class: 'button' %>
     </div>
-    <div class="column"
+    <div class="column">
       <%= button_tag 'Mes Siguiente', type: 'button', id: 'next_month', class: 'button' %>
     </div>
-</div>
+  </div>
+
   <%= submit_tag 'Filtrar', class: 'button' %>
 <% end %>
+
+
+<!-- Kanban Board -->
+<div class="kanban-board">
+  <% @statuses.each do |status| %>
+    <div class="kanban-column" data-status-id="<%= status.id %>">
+      <h3><%= status.name %></h3>
+      <div class="kanban-cards" data-status-id="<%= status.id %>">
+        <% @issues.where(status_id: status.id).each do |issue| %>
+          <div class="kanban-card" draggable="true" data-issue-id="<%= issue.id %>">
+            <strong><%= issue.subject %></strong>
+            <p>Añadido por <%= issue.author.name %> hace <%= time_ago_in_words(issue.created_on) %></p>
+            <div class="issue-details">
+              <div class="left-details">
+                <p><strong>Estado:</strong> <%= issue.status.name %></p>
+                <p><strong>Prioridad:</strong> <%= issue.priority.try(:name) || '-' %></p>
+                <p><strong>Asignado a:</strong> <%= issue.assigned_to.try(:name) || '-' %></p>
+                <p><strong>Categoría:</strong> <%= issue.category.try(:name) || '-' %></p>
+              </div>
+              <div class="right-details">
+                <p><strong>Fecha de inicio:</strong> <%= issue.start_date || '-' %></p>
+                <p><strong>Fecha fin:</strong> <%= issue.due_date || '-' %></p>
+                <p><strong>% Realizado:</strong> <%= issue.done_ratio %>%</p>
+                <p><strong>Tiempo estimado:</strong> <%= issue.estimated_hours.present? ? "#{issue.estimated_hours} h" : '-' %></p>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>
