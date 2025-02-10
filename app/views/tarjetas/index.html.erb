@@ -1,0 +1,31 @@
+<% content_for :header_tags do %>
+  <%= stylesheet_link_tag 'tarjetas', :plugin => :tarjetero_tareas %>
+  <%= javascript_include_tag 'tarjetas', :plugin => :tarjetero_tareas %>
+<% end %>
+<%= form_tag tarjetas_path, method: :get, id: "filter-form" do %>
+  <div class="row">
+    <div class="column">
+      <%= label_tag :project_id, 'Proyecto' %>
+      <%= select_tag :project_id, options_from_collection_for_select(Project.all, :id, :name, params[:project_id]), include_blank: true %>
+    </div>
+    <div class="column">
+      <%= label_tag :issue_id, 'Petición' %>
+      <%= select_tag :issue_id, options_from_collection_for_select(Issue.all, :id, :subject, params[:issue_id]), include_blank: true %>
+    </div>
+    <div class="column">
+      <%= label_tag :user_id, 'Usuario' %>
+      <%= select_tag :user_id, options_from_collection_for_select(User.active, :id, :name, params[:user_id]), include_blank: true %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="column">
+      <%= label_tag :start_date, 'Fecha Inicio' %>
+      <%= text_field_tag :start_date, params[:start_date].presence || l(Date.today.beginning_of_month.prev_month), type: 'date' %>
+    </div>
+    <div class="column">
+      <%= label_tag :end_date, 'Fecha Fin' %>
+      <%= text_field_tag :end_date, params[:end_date].presence || l(Date.today.end_of_month.prev_month), type: 'date' %>
+    </div>
+  </div>
+  <%= submit_tag 'Filtrar', class: 'button' %>
+<% end %>

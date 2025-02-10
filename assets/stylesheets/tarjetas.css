@@ -1,0 +1,18 @@
+/* assets/stylesheets/tarjetas.css */
+#filter-form .row {
+    margin-bottom: 10px;
+    overflow: auto;
+  }
+  
+  #filter-form .column {
+    float: left;
+    margin-right: 20px;
+    min-width: 200px;
+  }
+  
+  #filter-form .button {
+    clear: both;
+    display: block;
+    margin-top: 20px;
+  }
+  
